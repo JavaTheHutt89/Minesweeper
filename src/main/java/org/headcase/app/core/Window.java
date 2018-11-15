@@ -29,7 +29,7 @@ public class Window extends JFrame implements ActionListener {
     }
 
     public void createField() {
-        this.field = new Field(10, 10);
+        this.field = new Field(20, 20);
     }
 
     private void render() {
@@ -47,7 +47,6 @@ public class Window extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Cell cell = (Cell) e.getSource();
         openCell(cell);
-        field.nearCells(cell);
     }
 
     private void setFlag(Cell cell) {
@@ -56,10 +55,10 @@ public class Window extends JFrame implements ActionListener {
 
     private void openCell(Cell cell){
         if (cell.getState().equals(Cell.State.CLOSED)){
-            cell.setState(Cell.State.OPEN);
-            if (cell.isBomb())
+            if (cell.isBomb()) {
                 cell.setIcon(new ImageIcon(ClassLoader.getSystemResource("BANG.png")));
                 game.setGameState(Game.State.GAMEOVER);
+            } else field.openEmptyCells(cell);
         }
     }
 

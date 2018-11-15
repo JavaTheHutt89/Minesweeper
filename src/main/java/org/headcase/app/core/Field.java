@@ -2,10 +2,10 @@ package org.headcase.app.core;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 
-public class Field extends JPanel implements CellStateListener{
+public class Field extends JPanel implements CellStateListener {
 
     private final int cols;
     private final int rows;
@@ -37,7 +37,7 @@ public class Field extends JPanel implements CellStateListener{
         int bombsCount = cellsCount * 15 / 100;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                Cell cell = new Cell(new Point(j,i));
+                Cell cell = new Cell(new Point(j, i));
                 int rand = random.nextInt(cellsCount);
                 if (rand <= bombsCount)
                     cell.setBomb(true);
@@ -49,49 +49,58 @@ public class Field extends JPanel implements CellStateListener{
         Arrays.stream(cells).forEach(cells1 -> Arrays.stream(cells1).forEach(x -> System.out.println(x.isBomb())));
     }
 
-    public void nearCells(Cell cell){
-
+    public void openEmptyCells(Cell cell) {
         int x = cell.getPosition().x;
         int y = cell.getPosition().y;
-        if(!cell.isBomb()){
-            int bombsCount = 0;
-            try {
-//                if (cells[cell.getPosition().y - 1][cell.getPosition().x - 1].isBomb())
-//                    bombsCount++;
-//                if (cells[cell.getPosition().y - 1][cell.getPosition().x].isBomb())
-//                    bombsCount++;
-//                if (cells[cell.getPosition().y - 1][cell.getPosition().x + 1].isBomb())
-//                    bombsCount++;
-//                if (cells[cell.getPosition().y ][cell.getPosition().x + 1].isBomb())
-//                    bombsCount++;
-//                if (cells[cell.getPosition().y + 1][cell.getPosition().x + 1].isBomb())
-//                    bombsCount++;
-//                if (cells[cell.getPosition().y + 1][cell.getPosition().x].isBomb())
-//                    bombsCount++;
-//                if (cells[cell.getPosition().y + 1][cell.getPosition().x - 1].isBomb())
-//                    bombsCount++;
-//                if (cells[cell.getPosition().y][cell.getPosition().x - 1].isBomb())
-//                    bombsCount++;
 
-//                for (int i = y - 1; i < y + 1; i++) {
-//                    for (int j = x - 1; j < x + 1; j++) {
-//                        if (cells[i][j].isBomb()){
-//                            bombsCount++;
-//                            cell.setIcon(new ImageIcon(ClassLoader.getSystemResource("Numbers-"+bombsCount+"-Black-icon.png")));
-//                            nearCells(cell);
-//                        }
-//                    }
-//                }
+        if (Objects.requireNonNull(cell).getState() == Cell.State.OPEN)
+            return;
+        if (!cell.isBomb()) {
+            cell.setState(Cell.State.OPEN);
+            scanCellsAround(cell.getPosition());
+        }
+    }
 
+    private void scanCellsAround(Point position) {
+        int x = position.x;
+        int y = position.y;
+        List<Cell> cellsAround = new ArrayList<>();
+        ArrayList<Point> conditions = new ArrayList<>();
+        conditions.add(new Point(x - 1, y - 1));
+        conditions.add(new Point(x - 1, y));
+        conditions.add(new Point(x - 1, y + 1));
+        conditions.add(new Point(x, y + 1));
+        conditions.add(new Point(x + 1, y + 1));
+        conditions.add(new Point(x + 1, y));
+        conditions.add(new Point(x + 1, y - 1));
+        conditions.add(new Point(x, y - 1));
 
-
-//                if (bombsCount > 0){
-//                    cell.setIcon(new ImageIcon(ClassLoader.getSystemResource("Numbers-"+bombsCount+"-Black-icon.png")));
-//                }
-            } catch (ArrayIndexOutOfBoundsException e){
-
+        for (Point conditionPosition : conditions) {
+            if (inRange(conditionPosition.x,conditionPosition.y)){
+                Cell cell = cell(conditionPosition);
+                if (!cell.isBomb() && cell.getState() == Cell.State.CLOSED)
+                    cellsAround.add(cell);
             }
         }
+
+        for (Cell cell: cellsAround
+             ) {
+            openEmptyCells(cell);
+        }
+
+    }
+
+
+    public boolean inRange(int x, int y){
+        return x >= 0 && x < cols && y >=0 && y < rows;
+    }
+
+    public Cell cell(Point position){
+        return getCell(position.x, position.y);
+    }
+
+    private Cell getCell(int x, int y){
+        return cells[y][x];
     }
 
 
