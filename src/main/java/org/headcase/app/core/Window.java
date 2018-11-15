@@ -7,13 +7,11 @@ import java.awt.event.*;
 
 public class Window extends JFrame{
 
-    private Field field;
     private Game game;
     private MouseListener mouseListener;
 
-    public Window(String name) {
-        game = new Game();
-        createField();
+    public Window(String name, int cols, int rows) {
+        game = new Game(cols, rows);
         setName(name);
         init();
         pack();
@@ -24,26 +22,26 @@ public class Window extends JFrame{
             @Override
             public void mouseReleased(MouseEvent e) {
                 Cell cell = (Cell) e.getSource();
-                if (e.getButton() == 3)
-                    setFlag(cell);
+                if (e.getButton() == 3) {
+                    game.setFlag(cell);
+                    if (game.isWin())
+                        System.out.println("You win!");
+                }
                 if (e.getButton() == 1)
-                    openCell(cell);
+                    game.openCell(cell);
             }
         };
-        GridLayout gridLayout = new GridLayout(field.getRows(), field.getCols());
+        GridLayout gridLayout = new GridLayout(game.getRows(), game.getCols());
         setLayout(gridLayout);
         render();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(true);
+        setResizable(false);
         setVisible(true);
     }
 
-    public void createField() {
-        this.field = new Field(20, 20);
-    }
-
     private void render() {
+        Field field = game.getGameField();
         Cell[][] cells = field.getCells();
         for (Cell[] cell1 : cells) {
             for (int j = 0; j < field.getCols(); j++) {
@@ -51,22 +49,6 @@ public class Window extends JFrame{
                 cell.addMouseListener(mouseListener);
                 add(cell);
             }
-        }
-    }
-
-    private void setFlag(Cell cell) {
-        if (!cell.isFlaged() && cell.getState() != Cell.State.OPEN) {
-            cell.setFlaged(true);
-            System.out.println("flag set!");
-        }
-    }
-
-    private void openCell(Cell cell){
-        if (cell.getState().equals(Cell.State.CLOSED)){
-            if (cell.isBomb()) {
-                cell.setIcon(new ImageIcon(ClassLoader.getSystemResource("BANG.png")));
-                game.setGameState(Game.State.GAMEOVER);
-            } else field.openEmptyCells(cell);
         }
     }
 }

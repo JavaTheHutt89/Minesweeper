@@ -17,6 +17,7 @@ public class Cell extends JButton implements CellStateListener {
     private ArrayList<CellStateListener> cellStateListeners;
     private boolean isBomb = false;
     private boolean isFlaged = false;
+    private int bombsAround;
 
 
 
@@ -24,6 +25,7 @@ public class Cell extends JButton implements CellStateListener {
         super(text);
         this.position = position;
         this.state = State.CLOSED;
+        this.bombsAround = 0;
         cellStateListeners = new ArrayList<>();
         addListener(this);
     }
@@ -73,18 +75,34 @@ public class Cell extends JButton implements CellStateListener {
 
     public void setFlaged(boolean flaged) {
         isFlaged = flaged;
-        this.setIcon(new ImageIcon(ClassLoader.getSystemResource("flag.png")));
+        if (isFlaged) {
+            this.setIcon(new ImageIcon(ClassLoader.getSystemResource("flag.png")));
+        }else this.setIcon(UIManager.getIcon(DISABLED_ICON_CHANGED_PROPERTY));
     }
 
     public Point getPosition() {
         return position;
     }
 
+    public int getBombsAround() {
+        return bombsAround;
+    }
+
+    public void setBombsAround(int bombsAround) {
+        this.bombsAround += bombsAround;
+    }
+
     @Override
     public void checkCellState() {
         switch (state){
             case OPEN:
-                this.setBackground(Color.lightGray); break;
+                if (!isFlaged) {
+                    if (this.bombsAround > 0) {
+                        this.setText("" + bombsAround);
+                        this.setBackground(Color.lightGray);
+                    } else this.setBackground(Color.lightGray);
+                }
+                break;
             case CLOSED:
                 System.out.println("CLOSED"); break;
             default: break;
