@@ -73,6 +73,7 @@ public class Cell extends JButton implements CellStateListener {
 
     public void setFlaged(boolean flaged) {
         isFlaged = flaged;
+        this.setIcon(new ImageIcon(ClassLoader.getSystemResource("flag.png")));
     }
 
     public Point getPosition() {

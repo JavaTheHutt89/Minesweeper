@@ -5,10 +5,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class Window extends JFrame implements ActionListener {
+public class Window extends JFrame{
 
     private Field field;
     private Game game;
+    private MouseListener mouseListener;
 
     public Window(String name) {
         game = new Game();
@@ -19,6 +20,16 @@ public class Window extends JFrame implements ActionListener {
     }
 
     private void init() {
+        mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                Cell cell = (Cell) e.getSource();
+                if (e.getButton() == 3)
+                    setFlag(cell);
+                if (e.getButton() == 1)
+                    openCell(cell);
+            }
+        };
         GridLayout gridLayout = new GridLayout(field.getRows(), field.getCols());
         setLayout(gridLayout);
         render();
@@ -37,20 +48,17 @@ public class Window extends JFrame implements ActionListener {
         for (Cell[] cell1 : cells) {
             for (int j = 0; j < field.getCols(); j++) {
                 Cell cell = cell1[j];
-                cell.addActionListener(this);
+                cell.addMouseListener(mouseListener);
                 add(cell);
             }
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Cell cell = (Cell) e.getSource();
-        openCell(cell);
-    }
-
     private void setFlag(Cell cell) {
-        cell.setFlaged(true);
+        if (!cell.isFlaged() && cell.getState() != Cell.State.OPEN) {
+            cell.setFlaged(true);
+            System.out.println("flag set!");
+        }
     }
 
     private void openCell(Cell cell){
@@ -61,6 +69,4 @@ public class Window extends JFrame implements ActionListener {
             } else field.openEmptyCells(cell);
         }
     }
-
-
 }
