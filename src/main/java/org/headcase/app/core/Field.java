@@ -137,6 +137,13 @@ public class Field extends JPanel implements CellStateListener {
         return bombsCount;
     }
 
+    public void openBombs(){
+        for (Cell[] nestedCells: cells
+             ) {
+            Arrays.stream(nestedCells).filter(Cell::isBomb).forEach(Cell::openBomb);
+        }
+    }
+
     @Override
     public void checkCellState() {
 

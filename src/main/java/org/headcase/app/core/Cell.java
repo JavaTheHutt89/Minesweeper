@@ -92,6 +92,11 @@ public class Cell extends JButton implements CellStateListener {
         this.bombsAround += bombsAround;
     }
 
+    public void openBomb(){
+        state = State.OPEN;
+        this.setIcon(new ImageIcon(ClassLoader.getSystemResource("bomb.png")));
+    }
+
     @Override
     public void checkCellState() {
         switch (state){
