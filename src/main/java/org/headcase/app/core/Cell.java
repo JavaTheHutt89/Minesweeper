@@ -20,24 +20,6 @@ public class Cell extends JButton implements CellStateListener {
     private int bombsAround;
 
 
-
-    public Cell(String text, Point position) {
-        super(text);
-        this.position = position;
-        this.state = State.CLOSED;
-        this.bombsAround = 0;
-        cellStateListeners = new ArrayList<>();
-        addListener(this);
-    }
-
-    public Cell(Icon icon, Point position) {
-        super(icon);
-        this.position = position;
-        this.state = State.CLOSED;
-        cellStateListeners = new ArrayList<>();
-        addListener(this);
-    }
-
     public Cell(Point position) {
         this.position = position;
         this.state = State.CLOSED;
@@ -92,20 +74,17 @@ public class Cell extends JButton implements CellStateListener {
         this.bombsAround += bombsAround;
     }
 
-    public void openBomb(){
-        state = State.OPEN;
-        this.setIcon(new ImageIcon(ClassLoader.getSystemResource("bomb.png")));
-    }
-
     @Override
     public void checkCellState() {
         switch (state){
             case OPEN:
-                if (!isFlaged) {
+                if (!this.isBomb && !isFlaged) {
                     if (this.bombsAround > 0) {
                         this.setText("" + bombsAround);
                         this.setBackground(Color.lightGray);
                     } else this.setBackground(Color.lightGray);
+                } else if (this.isBomb && !this.isFlaged){
+                    this.setIcon(new ImageIcon(ClassLoader.getSystemResource("BANG.png")));
                 }
                 break;
             case CLOSED:

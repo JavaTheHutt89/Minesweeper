@@ -5,13 +5,14 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class Field extends JPanel implements CellStateListener {
+public class Field extends JPanel {
 
     private final int cols;
     private final int rows;
     private int bombsCount;
     private Cell[][] cells;
     private Random random;
+    private boolean isFirst = true;
 
     public Field(int rows, int cols) {
         this.cols = cols;
@@ -34,25 +35,19 @@ public class Field extends JPanel implements CellStateListener {
     }
 
     private void createCells() {
-        Font font =new Font("Times New Roman", Font.BOLD,20);
-        int cellsCount = cols * rows;
-        bombsCount = cellsCount * 15 / 100;
+        Font font = new Font("Times New Roman", Font.BOLD, 20);
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 Cell cell = new Cell(new Point(j, i));
-                int rand = random.nextInt(cellsCount);
-                if (rand <= bombsCount)
-                    cell.setBomb(true);
                 cell.setBackground(Color.gray);
                 cell.setFont(font);
-                cell.setMargin(new Insets(5,5,5,5));
+                cell.setMargin(new Insets(5, 5, 5, 5));
                 cell.setPreferredSize(new Dimension(Cell.CELL_SIZE, Cell.CELL_SIZE));
                 cells[i][j] = cell;
             }
         }
-        setupNumbers();
-
-        Arrays.stream(cells).forEach(cells1 -> Arrays.stream(cells1).forEach(x -> System.out.println(x.isBomb())));
+        this.repaint();
     }
 
     private void setupNumbers() {
@@ -76,6 +71,20 @@ public class Field extends JPanel implements CellStateListener {
             scanCells(cell.getPosition());
         } else if (cell.getBombsAround() > 0){
             cell.setState(Cell.State.OPEN);
+        }
+    }
+
+    private void setupBombs() {
+        int i = 0;
+        int cellsCount = cols * rows;
+        bombsCount = cellsCount * 15 / 100;
+        while (i < bombsCount){
+            int randX = random.nextInt(cols);
+            int randY = random.nextInt(rows);
+            if (!cells[randY][randX].isBomb()){
+                cells[randY][randX].setBomb(true);
+                i++;
+            }
         }
     }
 
@@ -112,10 +121,15 @@ public class Field extends JPanel implements CellStateListener {
     }
 
     private void scanCells(Point position){
+        if (isFirst) {
+            setupBombs();
+            setupNumbers();
+            isFirst = false;
+        }
         List<Cell> cellsAround = getCellsAround(position);
         for (Cell cell: cellsAround
         ) {
-            if (!cell.isBomb() && cell.getState() == Cell.State.CLOSED)
+            if (!cell.isBomb() && cell.getState().equals(Cell.State.CLOSED))
                 openEmptyCells(cell);
         }
     }
@@ -137,16 +151,10 @@ public class Field extends JPanel implements CellStateListener {
         return bombsCount;
     }
 
-    public void openBombs(){
+    public void openAllCells(){
         for (Cell[] nestedCells: cells
              ) {
-            Arrays.stream(nestedCells).filter(Cell::isBomb).forEach(Cell::openBomb);
+            Arrays.stream(nestedCells).forEach(cell -> cell.setState(Cell.State.OPEN));
         }
     }
-
-    @Override
-    public void checkCellState() {
-
-    }
-
 }

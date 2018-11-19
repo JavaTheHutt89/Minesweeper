@@ -1,6 +1,5 @@
 package org.headcase.app.core;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -62,7 +61,6 @@ public class Game implements GameStateListener{
     public void setFlag(Cell cell) {
         if (!cell.isFlaged() && cell.getState() != Cell.State.OPEN) {
             cell.setFlaged(true);
-            System.out.println("flag set!");
         } else if (cell.isFlaged()){
             cell.setFlaged(false);
         }
@@ -70,10 +68,7 @@ public class Game implements GameStateListener{
 
     public void openCell(Cell cell){
         if (cell.getState().equals(Cell.State.CLOSED)){
-            if (cell.isBomb()) {
-                cell.setIcon(new ImageIcon(ClassLoader.getSystemResource("BANG.png")));
-                this.setGameState(Game.State.GAMEOVER);
-            } else if (!cell.isFlaged()) gameField.openEmptyCells(cell);
+            if (!cell.isFlaged()) gameField.openEmptyCells(cell);
         }
         gameField.repaint();
     }
@@ -86,7 +81,8 @@ public class Game implements GameStateListener{
             case STARTED:
                 System.out.println("Started");break;
             case GAMEOVER:
-                System.out.println("You lose");break;
+                gameField.openAllCells();
+                break;
             default: break;
         }
     }
@@ -104,7 +100,7 @@ public class Game implements GameStateListener{
         return gameField.getBombsCount() == defusedBombs;
     }
 
-    public boolean isWasted(){
-        return true;
+    public boolean isWasted(Cell cell){
+        return cell.isBomb() && !cell.isFlaged();
     }
 }
