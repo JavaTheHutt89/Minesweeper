@@ -40,16 +40,21 @@ public class Main {
     }
 
     private static void menuActions(String actionCommand) {
-        switch (actionCommand){
+        switch (actionCommand) {
             case "Beginner":
-                window.setContentPane(new GamePanel(20,20));
-                window.pack();
-                window.repaint();
+                setupDifficulty(10,10);
                 break;
-            case "Advanced": break;
-            case "Expert": break;
+            case "Advanced":
+                setupDifficulty(15,15);
+                break;
+            case "Expert":
+                setupDifficulty(20,20);
+                break;
             default: break;
         }
     }
 
+    private static void  setupDifficulty(int cols, int rows) {
+        window.startTheNewGame(cols, rows);
+    }
 }

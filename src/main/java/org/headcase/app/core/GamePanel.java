@@ -9,11 +9,15 @@ import java.awt.event.MouseListener;
 public class GamePanel extends JPanel {
 
     private MouseListener mouseListener;
+
+    public Game getGame() {
+        return game;
+    }
+
     private Game game;
 
     public GamePanel(int cols, int rows) {
         newGame(cols, rows);
-        init();
         mouseListener = new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -21,7 +25,7 @@ public class GamePanel extends JPanel {
                 if (e.getButton() == 3) {
                     game.setFlag(cell);
                     if (game.isWin()) {
-                        System.out.println("You win!");
+                        game.setGameState(Game.State.WIN);
                     }
                 }
                 if (e.getButton() == 1) {
@@ -31,6 +35,7 @@ public class GamePanel extends JPanel {
                 }
             }
         };
+        init();
     }
 
     private void init(){
@@ -51,7 +56,7 @@ public class GamePanel extends JPanel {
         }
     }
 
-    private void newGame(int cols, int rows) {
+    public void newGame(int cols, int rows) {
         game = new Game(cols,rows);
     }
 }

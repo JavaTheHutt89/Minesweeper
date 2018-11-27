@@ -5,6 +5,13 @@ import java.util.Arrays;
 
 public class Game implements GameStateListener{
 
+
+    enum Difficulty{
+        Beginner,
+        Advanced,
+        Expert
+    }
+
     enum State {
         STARTED,
         WIN,
@@ -15,6 +22,7 @@ public class Game implements GameStateListener{
     private int rows;
     private ArrayList<GameStateListener> gameStateListeners;
     private State gameState;
+    private Difficulty difficulty;
     private Field gameField;
 
     public Game(int cols, int rows) {
@@ -37,7 +45,7 @@ public class Game implements GameStateListener{
     public void setGameState(State gameState) {
         this.gameState = gameState;
         for (GameStateListener gameStateListener : gameStateListeners) {
-            gameStateListener.checkGameState();
+            gameStateListener.checkGameState(this.gameState);
         }
     }
 
@@ -74,8 +82,8 @@ public class Game implements GameStateListener{
     }
 
     @Override
-    public void checkGameState() {
-        switch (gameState){
+    public void checkGameState(State state) {
+        switch (state){
             case WIN:
                 System.out.println("Win!");break;
             case STARTED:

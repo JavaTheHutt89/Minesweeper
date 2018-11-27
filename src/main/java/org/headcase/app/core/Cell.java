@@ -39,7 +39,7 @@ public class Cell extends JButton implements CellStateListener {
         this.state = state;
         for (CellStateListener cellStateListener:cellStateListeners
              ) {
-            cellStateListener.checkCellState();
+            cellStateListener.checkCellState(state);
         }
     }
 
@@ -75,7 +75,7 @@ public class Cell extends JButton implements CellStateListener {
     }
 
     @Override
-    public void checkCellState() {
+    public void checkCellState(State state) {
         switch (state){
             case OPEN:
                 if (!this.isBomb && !isFlaged) {
