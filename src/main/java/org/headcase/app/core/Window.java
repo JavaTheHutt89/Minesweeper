@@ -7,15 +7,12 @@ public class Window extends JFrame implements GameStateListener{
 
     private final String NAME = "Minesweeper";
     private GamePanel gamePanel;
-
-    public TimerAndFlagsCountLabel getTimerAndFlagsCountLabel() {
-        return timerAndFlagsCountLabel;
-    }
-
     private TimerAndFlagsCountLabel timerAndFlagsCountLabel;
     private JPanel jPanel;
+    private TopPanel topPanel;
 
     public Window() {
+        topPanel = new TopPanel();
         gamePanel = new GamePanel(10,10);
         gamePanel.getGame().addListener(this);
         setupTimer();
@@ -25,6 +22,7 @@ public class Window extends JFrame implements GameStateListener{
     private void init() {
         jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
+        jPanel.add(topPanel, BorderLayout.NORTH);
         jPanel.add(gamePanel, BorderLayout.CENTER);
         jPanel.add(timerAndFlagsCountLabel, BorderLayout.AFTER_LAST_LINE);
         setName(NAME);
@@ -92,7 +90,7 @@ public class Window extends JFrame implements GameStateListener{
     }
 
     private void setupTimer(){
-        timerAndFlagsCountLabel = new TimerAndFlagsCountLabel(gamePanel.getGame());
+        timerAndFlagsCountLabel = new TimerAndFlagsCountLabel();
         timerAndFlagsCountLabel.resetTimer();
         timerAndFlagsCountLabel.startTimer();
         gamePanel.getGame().setTimerAndFlagsCountLabel(timerAndFlagsCountLabel);

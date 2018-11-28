@@ -11,12 +11,10 @@ public class TimerAndFlagsCountLabel extends JLabel {
     private long startTime;
     private Timer timer;
     private int flagsCount;
-    private Game game;
 
-    public TimerAndFlagsCountLabel(Game game) {
+    public TimerAndFlagsCountLabel() {
         super();
         resetTimer();
-        this.game = game;
     }
 
     private Timer getTimer(){
@@ -32,8 +30,8 @@ public class TimerAndFlagsCountLabel extends JLabel {
         int seconds = (int) startTime / 1000;
         int minutes = seconds / 60;
         int hours = minutes / 60;
-        String time = String.format("Timer: %02d:%02d:%02d", hours, minutes, seconds);
-        setText(time + " | Flags: " + flagsCount);
+        String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        setText(time);
         startTime = startTime + 1000; // milliseconds
     }
 
@@ -52,10 +50,6 @@ public class TimerAndFlagsCountLabel extends JLabel {
 
     public boolean isTimerRunning(){
         return getTimer().isRunning();
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
     }
 
     public void setFlagsCount(int flagsCount) {
