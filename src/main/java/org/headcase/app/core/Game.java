@@ -23,7 +23,9 @@ public class Game implements GameStateListener{
     private ArrayList<GameStateListener> gameStateListeners;
     private State gameState;
     private Difficulty difficulty;
+    private int flagsCount;
     private Field gameField;
+    private TimerAndFlagsCountLabel timerAndFlagsCountLabel;
 
     public Game(int cols, int rows) {
         this.cols = cols;
@@ -31,11 +33,17 @@ public class Game implements GameStateListener{
         this.gameState = State.STARTED;
         gameStateListeners = new ArrayList<>();
         createField();
+        flagsCount = gameField.getBombsCount();
         addListener(this);
     }
 
     public void addListener(GameStateListener gameStateListener){
         this.gameStateListeners.add(gameStateListener);
+    }
+
+    public void setTimerAndFlagsCountLabel(TimerAndFlagsCountLabel timerAndFlagsCountLabel) {
+        this.timerAndFlagsCountLabel = timerAndFlagsCountLabel;
+        timerAndFlagsCountLabel.setFlagsCount(flagsCount);
     }
 
     public State getGameState() {
@@ -57,6 +65,10 @@ public class Game implements GameStateListener{
         return rows;
     }
 
+    public int getFlagsCount() {
+        return flagsCount;
+    }
+
     public void createField() {
         this.gameField = new Field(rows, cols);
     }
@@ -68,9 +80,15 @@ public class Game implements GameStateListener{
 
     public void setFlag(Cell cell) {
         if (!cell.isFlaged() && cell.getState() != Cell.State.OPEN) {
-            cell.setFlaged(true);
-        } else if (cell.isFlaged()){
+            if (flagsCount > 0) {
+                cell.setFlaged(true);
+                flagsCount--;
+                timerAndFlagsCountLabel.setFlagsCount(flagsCount);
+            }
+        } else if (cell.isFlaged()) {
             cell.setFlaged(false);
+            flagsCount++;
+            timerAndFlagsCountLabel.setFlagsCount(flagsCount);
         }
     }
 
@@ -85,9 +103,9 @@ public class Game implements GameStateListener{
     public void checkGameState(State state) {
         switch (state){
             case WIN:
-                System.out.println("Win!");break;
+                break;
             case STARTED:
-                System.out.println("Started");break;
+                break;
             case GAMEOVER:
                 gameField.openAllCells();
                 break;
@@ -101,9 +119,6 @@ public class Game implements GameStateListener{
              ) {
            defusedBombs += Arrays.stream(nestedCells).filter(cell -> cell.isBomb() && cell.isFlaged()).count();
         }
-
-        System.out.println("Bombs count: " + gameField.getBombsCount() +
-                "| Bombs defused: " + defusedBombs);
 
         return gameField.getBombsCount() == defusedBombs;
     }

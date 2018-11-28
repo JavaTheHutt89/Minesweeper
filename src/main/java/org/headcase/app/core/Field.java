@@ -18,6 +18,8 @@ public class Field extends JPanel {
         this.cols = cols;
         this.rows = rows;
         this.random = new Random();
+        int cellsCount = cols * rows;
+        this.bombsCount = cellsCount * 15 / 100;
         cells = new Cell[rows][cols];
         createCells();
     }
@@ -76,8 +78,6 @@ public class Field extends JPanel {
 
     private void setupBombs() {
         int i = 0;
-        int cellsCount = cols * rows;
-        bombsCount = cellsCount * 15 / 100;
         while (i < bombsCount){
             int randX = random.nextInt(cols);
             int randY = random.nextInt(rows);

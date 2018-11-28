@@ -16,7 +16,7 @@ public class WinOrLoosePanel extends JPanel {
         if (state.equals(Game.State.WIN)){
             this.imageIcon = new ImageIcon(ClassLoader.getSystemResource("win.gif"));
             this.textLablel.setFont(new Font("Time New Roman", Font.BOLD, 16));
-            this.textLablel.setText("Попробовать посложнее?");
+            this.textLablel.setText("Выбрать другую сложность?");
             this.textLablel.setHorizontalTextPosition(SwingConstants.CENTER);
         } else this.imageIcon = new ImageIcon(ClassLoader.getSystemResource("wasted.gif"));
         imageLablel.setIcon(imageIcon);

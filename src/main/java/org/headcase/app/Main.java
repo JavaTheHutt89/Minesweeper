@@ -1,6 +1,5 @@
 package org.headcase.app;
 
-import org.headcase.app.core.GamePanel;
 import org.headcase.app.core.Window;
 
 import javax.swing.*;
@@ -43,12 +42,15 @@ public class Main {
         switch (actionCommand) {
             case "Beginner":
                 setupDifficulty(10,10);
+                window.refreshFlagsCount();
                 break;
             case "Advanced":
                 setupDifficulty(15,15);
+                window.refreshFlagsCount();
                 break;
             case "Expert":
                 setupDifficulty(20,20);
+                window.refreshFlagsCount();
                 break;
             default: break;
         }

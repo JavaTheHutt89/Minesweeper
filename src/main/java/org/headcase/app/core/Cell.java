@@ -27,7 +27,7 @@ public class Cell extends JButton implements CellStateListener {
         addListener(this);
     }
 
-    private void addListener(CellStateListener cellStateListener){
+    private void addListener(CellStateListener cellStateListener) {
         cellStateListeners.add(cellStateListener);
     }
 
@@ -37,8 +37,8 @@ public class Cell extends JButton implements CellStateListener {
 
     public void setState(State state) {
         this.state = state;
-        for (CellStateListener cellStateListener:cellStateListeners
-             ) {
+        for (CellStateListener cellStateListener : cellStateListeners
+        ) {
             cellStateListener.checkCellState(state);
         }
     }
@@ -59,7 +59,7 @@ public class Cell extends JButton implements CellStateListener {
         isFlaged = flaged;
         if (isFlaged) {
             this.setIcon(new ImageIcon(ClassLoader.getSystemResource("flag.png")));
-        }else this.setIcon(UIManager.getIcon(DISABLED_ICON_CHANGED_PROPERTY));
+        } else this.setIcon(UIManager.getIcon(DISABLED_ICON_CHANGED_PROPERTY));
     }
 
     public Point getPosition() {
@@ -76,20 +76,21 @@ public class Cell extends JButton implements CellStateListener {
 
     @Override
     public void checkCellState(State state) {
-        switch (state){
+        switch (state) {
             case OPEN:
                 if (!this.isBomb && !isFlaged) {
                     if (this.bombsAround > 0) {
                         this.setText("" + bombsAround);
                         this.setBackground(Color.lightGray);
                     } else this.setBackground(Color.lightGray);
-                } else if (this.isBomb && !this.isFlaged){
+                } else if (this.isBomb && !this.isFlaged) {
                     this.setIcon(new ImageIcon(ClassLoader.getSystemResource("BANG.png")));
                 }
                 break;
             case CLOSED:
-                System.out.println("CLOSED"); break;
-            default: break;
+                break;
+            default:
+                break;
         }
     }
 
