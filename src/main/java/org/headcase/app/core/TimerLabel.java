@@ -1,18 +1,13 @@
 package org.headcase.app.core;
 
-import com.sun.deploy.util.StringUtils;
-
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class TimerAndFlagsCountLabel extends JLabel {
+public class TimerLabel extends JLabel {
 
     private long startTime;
     private Timer timer;
-    private int flagsCount;
 
-    public TimerAndFlagsCountLabel() {
+    public TimerLabel() {
         super();
         resetTimer();
     }
@@ -50,9 +45,5 @@ public class TimerAndFlagsCountLabel extends JLabel {
 
     public boolean isTimerRunning(){
         return getTimer().isRunning();
-    }
-
-    public void setFlagsCount(int flagsCount) {
-        this.flagsCount = flagsCount;
     }
 }

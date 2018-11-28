@@ -25,7 +25,7 @@ public class Game implements GameStateListener{
     private Difficulty difficulty;
     private int flagsCount;
     private Field gameField;
-    private TimerAndFlagsCountLabel timerAndFlagsCountLabel;
+    private FlagsCountLabel flagsCountLabel;
 
     public Game(int cols, int rows) {
         this.cols = cols;
@@ -41,9 +41,9 @@ public class Game implements GameStateListener{
         this.gameStateListeners.add(gameStateListener);
     }
 
-    public void setTimerAndFlagsCountLabel(TimerAndFlagsCountLabel timerAndFlagsCountLabel) {
-        this.timerAndFlagsCountLabel = timerAndFlagsCountLabel;
-        timerAndFlagsCountLabel.setFlagsCount(flagsCount);
+    public void setFlagsCountLabel(FlagsCountLabel flagsCountLabel) {
+        this.flagsCountLabel = flagsCountLabel;
+        flagsCountLabel.setFlagsCount(flagsCount);
     }
 
     public State getGameState() {
@@ -83,12 +83,12 @@ public class Game implements GameStateListener{
             if (flagsCount > 0) {
                 cell.setFlaged(true);
                 flagsCount--;
-                timerAndFlagsCountLabel.setFlagsCount(flagsCount);
+                flagsCountLabel.setFlagsCount(flagsCount);
             }
         } else if (cell.isFlaged()) {
             cell.setFlaged(false);
             flagsCount++;
-            timerAndFlagsCountLabel.setFlagsCount(flagsCount);
+            flagsCountLabel.setFlagsCount(flagsCount);
         }
     }
 

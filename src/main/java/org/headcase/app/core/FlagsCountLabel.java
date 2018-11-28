@@ -14,6 +14,6 @@ public class FlagsCountLabel extends JLabel {
 
     public void setFlagsCount(int flagsCount) {
         this.flagsCount = flagsCount;
-        setText(String.valueOf(this.flagsCount));
+        setText("Flags: " + this.flagsCount);
     }
 }

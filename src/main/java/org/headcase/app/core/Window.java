@@ -2,20 +2,32 @@ package org.headcase.app.core;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Window extends JFrame implements GameStateListener{
 
     private final String NAME = "Minesweeper";
     private GamePanel gamePanel;
-    private TimerAndFlagsCountLabel timerAndFlagsCountLabel;
+    private TimerLabel timerLabel;
     private JPanel jPanel;
     private TopPanel topPanel;
+    private FlagsCountLabel flagsCountLabel;
+    private JButton restartGameButton;
 
     public Window() {
         topPanel = new TopPanel();
+        timerLabel = topPanel.getTimerLabel();
+        flagsCountLabel = topPanel.getFlagsCountLabel();
+        topPanel.getRestartGameButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                restartTheGame();
+            }
+        });
         gamePanel = new GamePanel(10,10);
         gamePanel.getGame().addListener(this);
-        setupTimer();
+        gamePanel.getGame().setFlagsCountLabel(flagsCountLabel);
         init();
     }
 
@@ -24,7 +36,6 @@ public class Window extends JFrame implements GameStateListener{
         jPanel.setLayout(new BorderLayout());
         jPanel.add(topPanel, BorderLayout.NORTH);
         jPanel.add(gamePanel, BorderLayout.CENTER);
-        jPanel.add(timerAndFlagsCountLabel, BorderLayout.AFTER_LAST_LINE);
         setName(NAME);
         setContentPane(jPanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -38,7 +49,7 @@ public class Window extends JFrame implements GameStateListener{
     @Override
     public void checkGameState(Game.State state) {
         if (state.equals(Game.State.GAMEOVER)){
-            timerAndFlagsCountLabel.stopTimer();
+            timerLabel.stopTimer();
             String[] options = {"Try again?"};
             int position = JOptionPane.showOptionDialog(
                     null, new WinOrLoosePanel(state),"ПОТРАЧЕНО!",
@@ -49,7 +60,7 @@ public class Window extends JFrame implements GameStateListener{
             }
         }
         if (state.equals(Game.State.WIN)){
-            timerAndFlagsCountLabel.stopTimer();
+            timerLabel.stopTimer();
             String[] options = {"Beginner", "Advanced", "Expert", "Try again?"};
             int position = JOptionPane.showOptionDialog(
                     null, new WinOrLoosePanel(state),"ЭТО ПОБЕДА",
@@ -81,22 +92,16 @@ public class Window extends JFrame implements GameStateListener{
         jPanel.repaint();
         pack();
         repaint();
-        timerAndFlagsCountLabel.resetTimer();
-        timerAndFlagsCountLabel.startTimer();
+        timerLabel.resetTimer();
+        timerLabel.startTimer();
     }
 
     public void restartTheGame(){
         startTheNewGame(gamePanel.getGame().getCols(),gamePanel.getGame().getRows());
     }
 
-    private void setupTimer(){
-        timerAndFlagsCountLabel = new TimerAndFlagsCountLabel();
-        timerAndFlagsCountLabel.resetTimer();
-        timerAndFlagsCountLabel.startTimer();
-        gamePanel.getGame().setTimerAndFlagsCountLabel(timerAndFlagsCountLabel);
-    }
 
     public void refreshFlagsCount(){
-        gamePanel.getGame().setTimerAndFlagsCountLabel(timerAndFlagsCountLabel);
+        gamePanel.getGame().setFlagsCountLabel(flagsCountLabel);
     }
 }

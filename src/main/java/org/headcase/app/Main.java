@@ -22,7 +22,7 @@ public class Main {
 
     private static MenuBar setupMenuBar() {
         menuBar = new MenuBar();
-        menu = new Menu("Game settings");
+        menu = new Menu("Difficulty settings");
         MenuItem beginnerItem = new MenuItem("Beginner");
         menu.add(beginnerItem);
         MenuItem advancedItem = new MenuItem("Advanced");
