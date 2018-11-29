@@ -1,5 +1,7 @@
 package org.headcase.app.core;
 
+import org.headcase.app.UI.FlagsCountLabel;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,7 +14,7 @@ public class Game implements GameStateListener{
         Expert
     }
 
-    enum State {
+    public enum State {
         STARTED,
         WIN,
         GAMEOVER;

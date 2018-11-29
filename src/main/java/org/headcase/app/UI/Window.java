@@ -1,11 +1,14 @@
-package org.headcase.app.core;
+package org.headcase.app.UI;
+
+import org.headcase.app.core.Game;
+import org.headcase.app.core.GameStateListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Window extends JFrame implements GameStateListener{
+public class Window extends JFrame implements GameStateListener {
 
     private final String NAME = "Minesweeper";
     private GamePanel gamePanel;
@@ -13,7 +16,6 @@ public class Window extends JFrame implements GameStateListener{
     private JPanel jPanel;
     private TopPanel topPanel;
     private FlagsCountLabel flagsCountLabel;
-    private JButton restartGameButton;
 
     public Window() {
         topPanel = new TopPanel();
@@ -50,9 +52,10 @@ public class Window extends JFrame implements GameStateListener{
     public void checkGameState(Game.State state) {
         if (state.equals(Game.State.GAMEOVER)){
             timerLabel.stopTimer();
+            topPanel.getRestartGameButton().setIcon(new ImageIcon(ClassLoader.getSystemResource("dead.png")));
             String[] options = {"Try again?"};
             int position = JOptionPane.showOptionDialog(
-                    null, new WinOrLoosePanel(state),"ПОТРАЧЕНО!",
+                    null, new WinOrLoosePanel(state),"WASTED!",
                     JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
             if (position == 0){
                 restartTheGame();
@@ -61,9 +64,10 @@ public class Window extends JFrame implements GameStateListener{
         }
         if (state.equals(Game.State.WIN)){
             timerLabel.stopTimer();
+            topPanel.getRestartGameButton().setIcon(new ImageIcon(ClassLoader.getSystemResource("strong.png")));
             String[] options = {"Beginner", "Advanced", "Expert", "Try again?"};
             int position = JOptionPane.showOptionDialog(
-                    null, new WinOrLoosePanel(state),"ЭТО ПОБЕДА",
+                    null, new WinOrLoosePanel(state),"WIN!",
                     JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[3]);
             if (position == 3){
                 restartTheGame();
@@ -85,6 +89,7 @@ public class Window extends JFrame implements GameStateListener{
     }
 
     public void startTheNewGame(int cols, int rows){
+        topPanel.getRestartGameButton().setIcon(new ImageIcon(ClassLoader.getSystemResource("think.png")));
         jPanel.remove(gamePanel);
         gamePanel = new GamePanel(cols, rows);
         gamePanel.getGame().addListener(this);

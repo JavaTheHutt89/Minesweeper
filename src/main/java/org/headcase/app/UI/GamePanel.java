@@ -1,4 +1,8 @@
-package org.headcase.app.core;
+package org.headcase.app.UI;
+
+import org.headcase.app.core.Cell;
+import org.headcase.app.core.Field;
+import org.headcase.app.core.Game;
 
 import javax.swing.*;
 import java.awt.*;

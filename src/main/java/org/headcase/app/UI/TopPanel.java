@@ -1,4 +1,4 @@
-package org.headcase.app.core;
+package org.headcase.app.UI;
 
 import javax.swing.*;
 import java.awt.*;

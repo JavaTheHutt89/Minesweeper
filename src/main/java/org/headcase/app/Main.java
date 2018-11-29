@@ -1,6 +1,6 @@
 package org.headcase.app;
 
-import org.headcase.app.core.Window;
+import org.headcase.app.UI.Window;
 
 import javax.swing.*;
 import java.awt.*;
