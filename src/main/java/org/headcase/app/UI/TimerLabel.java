@@ -6,9 +6,15 @@ public class TimerLabel extends JLabel {
 
     private long startTime;
     private Timer timer;
+    private int seconds;
+    private int minutes;
+    private int hours;
 
     public TimerLabel() {
         super();
+        seconds = 0;
+        minutes = 0;
+        hours = 0;
         resetTimer();
     }
 
@@ -23,11 +29,22 @@ public class TimerLabel extends JLabel {
 
     private void taskPerformed() {
         int seconds = (int) startTime / 1000;
-        int minutes = seconds / 60;
-        int hours = minutes / 60;
+
+        if (seconds == 60) {
+            seconds = 0;
+            startTime = 0;
+            minutes++;
+        }
+
+        if (minutes == 60){
+            minutes = 0;
+            hours++;
+        }
+
         String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
         setText(time);
-        startTime = startTime + 1000; // milliseconds
+
+        startTime = startTime + 1000;
     }
 
     public void resetTimer(){
